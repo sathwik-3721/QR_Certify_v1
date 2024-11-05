@@ -1,6 +1,7 @@
 import logger from "../../../../../logger.js";
 import config from "../../../../../config.js";
 import mongoose from 'mongoose';
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 const DbConfig = {
     uri: config.MONGO_URI,
