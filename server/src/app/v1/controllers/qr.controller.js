@@ -157,5 +157,5 @@ export async function getDetails(req, res) {
 }
 
 export async function test(req,res) {
-    res.status(StatusCodes.OK).send("test successfully")
+    return res.status(StatusCodes.OK).send("test successfully")
 }
