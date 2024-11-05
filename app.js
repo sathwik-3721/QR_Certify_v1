@@ -53,12 +53,14 @@ app.use(urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(static_(join(__dirname, 'public')));
 
+//V1
+app.use('/v1', appv1);
+
 app.get("*", (req, res) => {
   res.sendFile(join(__dirname, "public/index.html"));
 });
 
-//V1
-app.use('/v1', appv1);
+
 
 logger.info("Application Environment : " + environmant);
 app.listen(port, () => {
