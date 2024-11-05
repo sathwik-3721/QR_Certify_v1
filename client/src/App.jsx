@@ -4,7 +4,7 @@ import Layout from "./layout/Layout";
 
 
 function App() {
-  const [authenticated, setAuthenticated] = useState(false);
+  const [authenticated, setAuthenticated] = useState(true);
   return (
     <>
       {authenticated ? (

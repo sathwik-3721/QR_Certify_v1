@@ -13,7 +13,7 @@ const __dirname = dirname( fileURLToPath(import.meta.url));
 const app = express();
 const environmant = config.ENV;
 //port setup - app start declaration
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 8001;
 const requestLoggerMiddleware = (req, res, next) => {
   const startTime = Date.now();
   res.on('finish', () => {
@@ -52,6 +52,10 @@ app.use(express.json({ limit: '10mb' }))
 app.use(urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(static_(join(__dirname, 'public')));
+
+app.get("*", (req, res) => {
+  res.sendFile(join(__dirname, "public/index.html"));
+});
 
 //V1
 app.use('/v1', appv1);
