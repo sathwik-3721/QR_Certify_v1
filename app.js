@@ -6,13 +6,13 @@ import { fileURLToPath } from "url";
 import { dirname } from "path";
 import cors from "cors";
 //file imports
-import config from "./config.js";
 import logger from "./logger.js";
 import appv1 from "./server/src/app/v1/app.v1.js";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
-const environmant = config.ENV;
 //port setup - app start declaration
+import dotenv from "dotenv";
+dotenv.config();
 const port = process.env.PORT || 8001;
 const requestLoggerMiddleware = (req, res, next) => {
   const startTime = Date.now();
@@ -60,7 +60,6 @@ app.get("*", (_req, res) => {
   res.sendFile(join(__dirname, "public/index.html"));
 });
 
-logger.info("Application Environment : " + environmant);
 app.listen(port, () => {
   console.log("Server started on port: " + port);
 });

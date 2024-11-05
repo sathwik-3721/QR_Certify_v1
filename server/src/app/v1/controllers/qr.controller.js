@@ -1,53 +1,50 @@
 // import logger from "../../../../../logger.js";
-import config from "../../../../../config.js";
 // import Qr from "../models/qr.model.js";
 import Qr from "../models/qr.model.js";
-import { StatusCodes } from 'http-status-codes';
-import nodemailer from 'nodemailer'
+import { StatusCodes } from "http-status-codes";
+import nodemailer from "nodemailer";
 import multer from "multer";
+import dotenv from "dotenv";
+dotenv.config();
 
 const storage = multer.memoryStorage();
 
-const upload = multer({ 
-	storage: storage,
-	limits: { fileSize: 1024 * 1024 * 512 } 
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 1024 * 1024 * 512 },
 });
 
 // Middleware to handle file uploads
 export const uploadData = async (req, res) => {
-        try {
-            const { name, email,event,image } = req.body; // Get name and email from body
+  try {
+    const { name, email, event, image } = req.body; // Get name and email from body
 
-            // Debugging output
-            console.log(Object.keys(req))
-            console.log("Received Name:", name);
-            console.log("Received Email:", email);
-            console.log("Received event:", event);
-            // console.log("Received Image Buffer:", image);
+    // console.log("Received Image Buffer:", image);
 
-            const newQr = new Qr({
-                name,
-                email,
-                event,
-                image,
-            });
+    const newQr = new Qr({
+      name,
+      email,
+      event,
+      image,
+    });
 
-            await newQr.save(); // Save the document to MongoDB
-            return res.status(StatusCodes.OK).send({ message: 'Data uploaded successfully', newQr });
-        } catch (error) {
-            console.error("An error occurred in uploadData function:", error);
-            if (error.status) {
-                res.status(error.status).send(error.message);
-            } else {
-                res.status(StatusCodes.INTERNAL_SERVER_ERROR).send("An error occurred");
-            }
-        }
+    await newQr.save(); // Save the document to MongoDB
+    return res
+      .status(StatusCodes.OK)
+      .send({ message: "Data uploaded successfully", newQr });
+  } catch (error) {
+    console.error("An error occurred in uploadData function:", error);
+    if (error.status) {
+      res.status(error.status).send(error.message);
+    } else {
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).send("An error occurred");
     }
+  }
+};
 
 export const sendCertificate = [
   upload.single("pdf"),
-  (req,res) => {
-
+  (req, res) => {
     const pdfBuffer = req.file.buffer; // Access the uploaded PDF file in memory
     const fileName = req.file.originalname; // Get the original filename
 
@@ -103,59 +100,60 @@ export const sendCertificate = [
   </table>
 </body>
 </html>
-`
+`;
+
+    const { APP_MAIL_USER, APP_MAIL_PASSWORD } = process.env;
 
     const email = req.body.email;
-        const mailDetails = {
-        from: config.APP_MAIL_USER,
-        to: email,
-        subject: "Participation Certificate",
-        html,
-        attachments: [
-            {
-              filename: fileName, // Name the file
-              content:pdfBuffer
-            }
-          ]
-      };
+    const mailDetails = {
+      from: APP_MAIL_USER,
+      to: email,
+      subject: "Participation Certificate",
+      html,
+      attachments: [
+        {
+          filename: fileName, // Name the file
+          content: pdfBuffer,
+        },
+      ],
+    };
 
     const mailTransporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: config.APP_MAIL_USER,
-            pass: config.APP_MAIL_PASSWORD
-        }
-    })
-
-    mailTransporter.sendMail(mailDetails, function(err, data) {
-        if(err) {
-            console.log('Error Occurs',err);
-            return res.status(StatusCodes.CONFLICT).send("could not send mail")
-        } else {
-            console.log('Email sent successfully');
-            return res.status(StatusCodes.OK).send("Send mail successfully")
-        }
+      service: "gmail",
+      auth: {
+        user: APP_MAIL_USER,
+        pass: APP_MAIL_PASSWORD,
+      },
     });
 
-}
-]
+    mailTransporter.sendMail(mailDetails, function (err, data) {
+      if (err) {
+        console.log("Error Occurs", err);
+        return res.status(StatusCodes.CONFLICT).send("could not send mail");
+      } else {
+        console.log("Email sent successfully");
+        return res.status(StatusCodes.OK).send("Send mail successfully");
+      }
+    });
+  },
+];
 
 export async function getDetails(req, res) {
-    try {
-        const { name, email,event } = req.query;
-        const result = await Qr.findOne({ name, email, event });
-        console.log(result)
-        return res.send(result)
-    } catch(error) {
-        console.error("An error occurred in uploadData function:", error);
-        if (error.status) {
-            res.status(error.status).send(error.message);
-        } else {
-            res.status(StatusCodes.INTERNAL_SERVER_ERROR).send("An error occurred");
-        }
+  try {
+    const { name, email, event } = req.query;
+    const result = await Qr.findOne({ name, email, event });
+    console.log(result);
+    return res.send(result);
+  } catch (error) {
+    console.error("An error occurred in uploadData function:", error);
+    if (error.status) {
+      res.status(error.status).send(error.message);
+    } else {
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).send("An error occurred");
     }
+  }
 }
 
-export async function test(req,res) {
-    return res.status(StatusCodes.OK).send("test successfully")
+export async function test(_req, res) {
+  return res.status(StatusCodes.OK).send("test successfully");
 }
