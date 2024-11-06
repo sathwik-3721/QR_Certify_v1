@@ -82,19 +82,10 @@ export const sendCertificate = [
       </td>
     </tr>
 
-    <!-- Button -->
-    <tr>
-      <td style="padding: 20px; text-align: center;">
-        <a href="[Certificate Download Link]" style="background-color: #2368a0; color: #ffffff; text-decoration: none; padding: 10px 20px; border-radius: 5px; font-size: 16px;">
-          Download Your Certificate
-        </a>
-      </td>
-    </tr>
-
     <!-- Footer -->
     <tr>
       <td style="background-color: #f4f4f4; padding: 20px; text-align: center; font-size: 14px; color: #777777;">
-        <p style="margin: 0;">© [Year] [Your Organization]. All Rights Reserved.</p>
+        <p style="margin: 0;">© [Miracle Siftware Systems. All Rights Reserved.</p>
       </td>
     </tr>
   </table>
