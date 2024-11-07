@@ -129,7 +129,7 @@ export const sendCertificate = [
 </html>
 `
     const mailDetails = {
-        from: config.APP_MAIL_USER,
+        from: process.env.APP_MAIL_USER,
         to: email,
         subject: "Participation Certificate",
         html,
@@ -144,8 +144,8 @@ export const sendCertificate = [
     const mailTransporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-            user: config.APP_MAIL_USER,
-            pass: config.APP_MAIL_PASSWORD
+            user: process.env.APP_MAIL_USER,
+            pass: process.env.APP_MAIL_PASSWORD
         }
     })
     console.log("mail sent",email)
