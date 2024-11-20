@@ -5,6 +5,8 @@ import { StatusCodes } from "http-status-codes";
 import nodemailer from "nodemailer";
 import multer from "multer";
 import dotenv from "dotenv";
+import { pdf } from "@react-pdf/renderer";
+import { Document, Page, Text } from "@react-pdf/renderer";
 dotenv.config();
 
 const storage = multer.memoryStorage();
@@ -80,8 +82,17 @@ export const sendCertificate = [
   async (req,res) => {
     try{
       const {name,email,event} = req.body;
+      const MyDocument = () => (
+        <Document>
+          <Page>
+            <Text>{name} ef we</Text>
+          </Page>
+        </Document>
+
+      );
+      
     console.log(email);
-    const pdfBuffer = req.file.buffer; // Access the uploaded PDF file in memory
+    const pdfBuffer = await pdf(<MyDocument />).toBuffer(); // Access the uploaded PDF file in memory
     const fileName = req.file.originalname; // Get the original filename
 
     const html = `<!DOCTYPE html>
