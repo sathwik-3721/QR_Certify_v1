@@ -160,7 +160,7 @@ export const sendCertificate = [
             return res.status(StatusCodes.OK).send("Send mail successfully")
         }
     });
-
+    // return res.status(StatusCodes.OK).send("Send mail successfully")
     }
     catch(error){
       console.error("An error occurred in uploadData function:", error);
